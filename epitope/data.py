@@ -58,6 +58,8 @@ def parse_pdb_chain(pdb_text: str, chain_id: str):
         if rec == "HEADER" and date == 0:
             date = parse_pdb_date(line)
             continue
+        if rec == "TER" and len(line) > 21 and line[21] == chain_id:
+            break                                      # hết chain: bỏ phần sau TER (như GraphBepi)
         if rec not in ("ATOM", "HETATM") or len(line) < 54:
             continue
         if line[21] != chain_id or line[12:16].strip() != "CA":
@@ -86,9 +88,17 @@ def map_epitope_labels(sequence: str, sites: list, epitope_field: str) -> list:
         pos, resn = token.split("_")
         if resn not in LABEL_AA:
             continue
+        want = LABEL_AA[resn]
         idx = site2idx.get(pos)
-        if idx is not None and sequence[idx] == LABEL_AA[resn]:
+        if idx is not None and sequence[idx] == want:  # khớp đúng số residue + đúng tên
             labels[idx] = 1
+            continue
+        # dự phòng như GraphBepi: lấy residue đầu tiên có key bắt đầu bằng `pos` và đúng tên
+        # (vd "3_GLY" khi residue 3 là VAL -> thử "3A")
+        for key, j in site2idx.items():
+            if key[:len(pos)] == pos and sequence[j] == want:
+                labels[j] = 1
+                break
     return labels
 
 
