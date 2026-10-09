@@ -91,6 +91,17 @@ def test_label_mapping_prefix_fallback_and_mismatch():
     assert data.map_epitope_labels(seq, sites, "2_ALA") == [0, 0, 0, 0, 0, 0, 0]
 
 
+def test_label_fallback_does_not_match_longer_residue_numbers():
+    # residue 3 is VAL, so the exact match for "3_GLY" fails. "30" is also GLY but is a different
+    # residue number, not an insertion code of 3: it must NOT be labelled; "3A" (GLY) must be.
+    seq, sites = "VGG", ["3", "30", "3A"]
+    assert data.map_epitope_labels(seq, sites, "3_GLY") == [0, 0, 1]
+    # without any insertion-code residue the token is simply ignored (old prefix match gave [0, 1])
+    assert data.map_epitope_labels("VG", ["3", "30"], "3_GLY") == [0, 0]
+    # negative residue numbers with insertion codes still work
+    assert data.map_epitope_labels("VG", ["-3", "-3A"], "-3_GLY") == [0, 1]
+
+
 def test_filter_and_splits():
     def mk(i, date, n_pos=1, length=10):
         return data.Chain(f"c{i}", date, "A" * length, [str(k) for k in range(length)],

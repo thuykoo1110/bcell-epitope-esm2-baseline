@@ -93,10 +93,10 @@ def map_epitope_labels(sequence: str, sites: list, epitope_field: str) -> list:
         if idx is not None and sequence[idx] == want:  # khớp đúng số residue + đúng tên
             labels[idx] = 1
             continue
-        # dự phòng như GraphBepi: lấy residue đầu tiên có key bắt đầu bằng `pos` và đúng tên
-        # (vd "3_GLY" khi residue 3 là VAL -> thử "3A")
+        # Phần sau `pos` phải là chữ cái, nếu không "3" sẽ khớp nhầm
+        # "30", "31", "300"... (khớp tiền tố thuần túy gán nhãn sai residue).
         for key, j in site2idx.items():
-            if key[:len(pos)] == pos and sequence[j] == want:
+            if key[:len(pos)] == pos and key[len(pos):].isalpha() and sequence[j] == want:
                 labels[j] = 1
                 break
     return labels

@@ -1,0 +1,62 @@
+{
+  "config": {
+    "model": "esm2_35m",
+    "pos_weight": "none",
+    "seed": 1,
+    "epochs": 40,
+    "patience": 6,
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "batch_size": 2048,
+    "hidden": 256,
+    "dropout": 0.3,
+    "data_dir": "data/processed",
+    "emb_dir": "embeddings",
+    "out_dir": "results",
+    "device": "cuda"
+  },
+  "best_epoch": 2,
+  "val": {
+    "pr_auc": 0.23766360072634257,
+    "roc_auc": 0.6581699124210048,
+    "prevalence": 0.13325701653957367,
+    "n_residues": 14851,
+    "n_positive": 1979,
+    "threshold": 0.15699203312397003,
+    "precision": 0.2264957264957265,
+    "recall": 0.4552804446690248,
+    "f1": 0.3025012590229981,
+    "mcc": 0.16594482825928636,
+    "tp": 901,
+    "fp": 3077,
+    "fn": 1078,
+    "tn": 9795
+  },
+  "test": {
+    "pr_auc": 0.19440418659237407,
+    "roc_auc": 0.7077790263787387,
+    "prevalence": 0.08962234109640121,
+    "n_residues": 15543,
+    "n_positive": 1393,
+    "threshold": 0.15699203312397003,
+    "precision": 0.16901790558871405,
+    "recall": 0.4472361809045226,
+    "f1": 0.24532388265406577,
+    "mcc": 0.15497711857739202,
+    "tp": 623,
+    "fp": 3063,
+    "fn": 770,
+    "tn": 11087
+  },
+  "baselines": {
+    "prevalence_test": 0.08962234109640121,
+    "random_scorer_pr_auc_test": 0.09240833749800961,
+    "all_negative_test": {
+      "accuracy": 0.9103776619700187,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mcc": 0.0
+    }
+  }
+}
